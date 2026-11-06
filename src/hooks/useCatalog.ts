@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { supabase } from '@/lib/supabase';
+import { isSupabaseConfigured, supabase } from '@/lib/supabase';
 import type { Product, Category } from '@/data/types';
 
 export function useCategories() {
@@ -10,6 +10,10 @@ export function useCategories() {
   useEffect(() => {
     let cancelled = false;
     async function fetch() {
+      if (!isSupabaseConfigured) {
+        setLoading(false);
+        return;
+      }
       const { data, error } = await supabase
         .from('categories')
         .select('*')
@@ -43,6 +47,10 @@ export function useProducts(options?: {
   useEffect(() => {
     let cancelled = false;
     async function fetch() {
+      if (!isSupabaseConfigured) {
+        setLoading(false);
+        return;
+      }
       let query = supabase
         .from('products')
         .select('*')
@@ -91,6 +99,10 @@ export function useProduct(slug: string | undefined) {
     }
     let cancelled = false;
     async function fetch() {
+      if (!isSupabaseConfigured) {
+        setLoading(false);
+        return;
+      }
       const { data, error } = await supabase
         .from('products')
         .select('*')
@@ -125,6 +137,10 @@ export function useRelatedProducts(product: Product | null, limit = 4) {
     let cancelled = false;
     async function fetch() {
       if (!product) return;
+      if (!isSupabaseConfigured) {
+        setLoading(false);
+        return;
+      }
       const { data } = await supabase
         .from('products')
         .select('*')

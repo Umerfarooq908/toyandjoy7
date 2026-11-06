@@ -3,7 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { Check, ShoppingBag, CreditCard, Banknote, Smartphone, Wallet, ChevronDown } from 'lucide-react';
 import Breadcrumb from '@/components/Breadcrumb';
 import { useShop, formatPKR } from '@/context/ShopContext';
-import { supabase } from '@/lib/supabase';
+import { isSupabaseConfigured, supabase } from '@/lib/supabase';
 
 const PROVINCES = ['Sindh', 'Punjab', 'Khyber Pakhtunkhwa', 'Balochistan', 'Gilgit-Baltistan', 'Islamabad Capital Territory'];
 
@@ -58,6 +58,10 @@ export default function CheckoutPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!isSupabaseConfigured) {
+      setOrderError('Online ordering is temporarily unavailable while the store database is being configured. Please try again later.');
+      return;
+    }
     if (!validate()) return;
     setSubmitting(true);
     setOrderError(null);
