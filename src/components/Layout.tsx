@@ -11,10 +11,16 @@ export default function Layout() {
 
   return (
     <div className="min-h-screen bg-white font-body">
+      <a
+        href="#main-content"
+        className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-[60] focus:rounded-full focus:bg-navy-600 focus:px-5 focus:py-2.5 focus:font-heading focus:font-semibold focus:text-white"
+      >
+        Skip to content
+      </a>
       <AnnouncementBar />
       <Header onMenuClick={() => setMenuOpen(true)} />
       <MobileMenu open={menuOpen} onClose={() => setMenuOpen(false)} />
-      <main>
+      <main id="main-content">
         <Outlet />
       </main>
       <Footer />

@@ -9,13 +9,11 @@ const PROVINCES = ['Sindh', 'Punjab', 'Khyber Pakhtunkhwa', 'Balochistan', 'Gilg
 
 const PAYMENT_METHODS = [
   { id: 'cod', label: 'Cash on Delivery', icon: Banknote, desc: 'Pay when your order arrives', available: true },
-  { id: 'bank', label: 'Bank Transfer', icon: CreditCard, desc: 'Transfer to our bank account', available: true },
-  { id: 'easypaisa', label: 'Easypaisa', icon: Smartphone, desc: 'Mobile wallet payment', available: false },
-  { id: 'jazzcash', label: 'JazzCash', icon: Wallet, desc: 'Mobile wallet payment', available: false },
-  { id: 'card', label: 'Card Payment', icon: CreditCard, desc: 'Credit / Debit card', available: false },
+  { id: 'bank', label: 'Bank Transfer', icon: CreditCard, desc: 'Bank account details will be shared when Toy & Joy contacts you to confirm your order', available: true },
+  { id: 'easypaisa', label: 'Easypaisa', icon: Smartphone, desc: 'Payment details will be shared when Toy & Joy contacts you to confirm your order', available: true },
+  { id: 'jazzcash', label: 'JazzCash', icon: Wallet, desc: 'Payment details will be shared when Toy & Joy contacts you to confirm your order', available: true },
+  { id: 'card', label: 'Card Payment', icon: CreditCard, desc: 'Credit / Debit card — payment details will be shared when Toy & Joy contacts you to confirm your order', available: true },
 ];
-
-const SHIPPING_FLAT = 250;
 
 export default function CheckoutPage() {
   const { cart, cartTotal, updateQuantity, removeFromCart, clearCart } = useShop();
@@ -32,16 +30,12 @@ export default function CheckoutPage() {
     notes: '',
   });
   const [paymentMethod, setPaymentMethod] = useState('cod');
-  const [discountCode, setDiscountCode] = useState('');
-  const [discountApplied, setDiscountApplied] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [orderPlaced, setOrderPlaced] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [orderError, setOrderError] = useState<string | null>(null);
 
-  const discount = discountApplied ? Math.round(cartTotal * 0.1) : 0;
-  const shipping = cartTotal > 0 ? SHIPPING_FLAT : 0;
-  const finalTotal = cartTotal - discount + shipping;
+  const finalTotal = cartTotal;
 
   const validate = (): boolean => {
     const e: Record<string, string> = {};
@@ -78,8 +72,8 @@ export default function CheckoutPage() {
         postal_code: form.postalCode,
         payment_method: paymentMethod,
         subtotal: cartTotal,
-        discount,
-        shipping_cost: shipping,
+        discount: 0,
+        shipping_cost: 0,
         total: finalTotal,
         status: 'pending',
       })
@@ -117,15 +111,6 @@ export default function CheckoutPage() {
     window.scrollTo(0, 0);
   };
 
-  const applyDiscount = () => {
-    // Demo discount code
-    if (discountCode.toUpperCase() === 'TOYJOY10') {
-      setDiscountApplied(true);
-    } else {
-      setDiscountApplied(false);
-    }
-  };
-
   if (orderPlaced) {
     return (
       <div className="bg-cream-50 py-16">
@@ -135,8 +120,8 @@ export default function CheckoutPage() {
           </div>
           <h1 className="font-heading text-3xl font-bold text-navy-600 sm:text-4xl">Order Confirmed!</h1>
           <p className="mt-3 text-navy-400">
-            Thank you for your order. This is a demo confirmation — no real payment has been processed.
-            You will receive an order confirmation once the store is fully operational.
+            Thank you for your order. Toy &amp; Joy will contact you shortly to confirm your order and share the payment details.
+            Delivery takes 1–2 days in Karachi and 3–7 days in other cities.
           </p>
           <div className="mt-8 rounded-2xl border border-cream-200 bg-white p-6 text-left shadow-soft">
             <h2 className="mb-4 font-heading text-lg font-bold text-navy-600">Order Summary</h2>
@@ -159,10 +144,17 @@ export default function CheckoutPage() {
                   {PAYMENT_METHODS.find((m) => m.id === paymentMethod)?.label}
                 </span>
               </div>
+              <div className="flex justify-between">
+                <span className="text-navy-400">Delivery</span>
+                <span className="font-semibold text-navy-600">Karachi 1–2 days, other cities 3–7 days</span>
+              </div>
               <div className="border-t border-cream-200 pt-2 flex justify-between">
                 <span className="font-heading font-bold text-navy-600">Total</span>
                 <span className="font-heading font-bold text-navy-600">{formatPKR(finalTotal)}</span>
               </div>
+              <p className="pt-2 text-xs text-navy-400">
+                Delivery charges will be confirmed when we contact you to confirm your order. Returns and exchanges are accepted within 7 days of delivery — see our <Link to="/policies" className="font-semibold text-sky-500 hover:text-sky-400">Store Policies</Link>.
+              </p>
             </div>
           </div>
           <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:justify-center">
@@ -325,28 +317,29 @@ export default function CheckoutPage() {
                       paymentMethod === method.id
                         ? 'border-sky-500 bg-sky-500/5'
                         : 'border-cream-200 hover:border-cream-200'
-                    } ${!method.available ? 'cursor-not-allowed opacity-50' : ''}`}
+                    }`}
                   >
                     <input
                       type="radio"
                       name="payment"
                       value={method.id}
                       checked={paymentMethod === method.id}
-                      onChange={() => method.available && setPaymentMethod(method.id)}
-                      disabled={!method.available}
+                      onChange={() => setPaymentMethod(method.id)}
                       className="h-5 w-5 text-sky-500 focus:ring-sky-500"
                     />
                     <method.icon className="h-6 w-6 text-navy-600" />
                     <div className="flex-1">
                       <p className="font-heading text-sm font-bold text-navy-600">
                         {method.label}
-                        {!method.available && <span className="ml-2 text-xs font-normal text-navy-400">Coming soon</span>}
                       </p>
                       <p className="text-xs text-navy-400">{method.desc}</p>
                     </div>
                   </label>
                 ))}
               </div>
+              <p className="mt-4 text-xs leading-relaxed text-navy-400">
+                For Bank Transfer, Easypaisa, JazzCash and Card payments, Toy &amp; Joy will share the payment details with you when we contact you to confirm your order.
+              </p>
             </section>
           </div>
 
@@ -380,54 +373,19 @@ export default function CheckoutPage() {
                 ))}
               </ul>
 
-              {/* Discount code */}
-              <div className="mt-5 border-t border-cream-200 pt-5">
-                <div className="flex gap-2">
-                  <input
-                    type="text"
-                    value={discountCode}
-                    onChange={(e) => setDiscountCode(e.target.value)}
-                    placeholder="Discount code"
-                    className="flex-1 rounded-xl border border-cream-200 px-4 py-2 text-sm outline-none focus:border-sky-500"
-                  />
-                  <button
-                    type="button"
-                    onClick={applyDiscount}
-                    className="rounded-xl bg-navy-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-navy-500"
-                  >
-                    Apply
-                  </button>
-                </div>
-                {discountApplied && (
-                  <p className="mt-2 flex items-center gap-1 text-xs font-semibold text-grass-500">
-                    <Check className="h-3.5 w-3.5" /> Code applied! 10% discount
-                  </p>
-                )}
-                {discountCode && !discountApplied && (
-                  <p className="mt-2 text-xs text-navy-400">Try code: TOYJOY10</p>
-                )}
-              </div>
-
               {/* Totals */}
               <div className="mt-5 space-y-2 border-t border-cream-200 pt-5 text-sm">
                 <div className="flex justify-between">
                   <span className="text-navy-400">Subtotal</span>
                   <span className="font-semibold text-navy-600">{formatPKR(cartTotal)}</span>
                 </div>
-                {discount > 0 && (
-                  <div className="flex justify-between">
-                    <span className="text-navy-400">Discount (10%)</span>
-                    <span className="font-semibold text-grass-500">-{formatPKR(discount)}</span>
-                  </div>
-                )}
-                <div className="flex justify-between">
-                  <span className="text-navy-400">Shipping</span>
-                  <span className="font-semibold text-navy-600">{formatPKR(shipping)}</span>
-                </div>
                 <div className="flex justify-between border-t border-cream-200 pt-3">
                   <span className="font-heading text-base font-bold text-navy-600">Total</span>
                   <span className="font-heading text-xl font-bold text-navy-600">{formatPKR(finalTotal)}</span>
                 </div>
+                <p className="pt-1 text-xs leading-relaxed text-navy-400">
+                  Delivery charges will be confirmed when we contact you to confirm your order. Delivery: Karachi 1–2 days, other cities 3–7 days.
+                </p>
               </div>
 
               <button
@@ -438,7 +396,7 @@ export default function CheckoutPage() {
                 {submitting ? 'Placing Order…' : 'Place Order'}
               </button>
               <p className="mt-3 text-center text-xs text-navy-400">
-                Demo checkout — no real payment will be processed.
+                Returns and exchanges within 7 days of delivery. See our <Link to="/policies" className="font-semibold text-sky-500 hover:text-sky-400">Store Policies</Link>.
               </p>
               <Link to="/shop" className="mt-3 block text-center text-sm font-semibold text-sky-500 transition hover:text-sky-400">
                 Continue Shopping

@@ -5,19 +5,22 @@ import Logo from './Logo';
 const quickLinks = [
   { label: 'Home', to: '/' },
   { label: 'Shop All', to: '/shop' },
-  { label: 'Best Sellers', to: '/#best-sellers' },
-  { label: 'New Arrivals', to: '/#new-arrivals' },
-  { label: 'About Us', to: '/#why-us' },
-  { label: 'Contact Us', to: '/#footer' },
+  { label: 'About Us', to: '/about' },
+  { label: 'Contact Us', to: '/contact' },
 ];
 
 const supportLinks = [
-  { label: 'FAQs', to: '/#footer' },
-  { label: 'Shipping Information', to: '/#footer' },
-  { label: 'Returns & Refunds', to: '/#footer' },
-  { label: 'Privacy Policy', to: '/#footer' },
-  { label: 'Terms & Conditions', to: '/#footer' },
-  { label: 'Order Tracking', to: '/#footer' },
+  { label: 'Shipping Information', to: '/policies#delivery' },
+  { label: 'Returns & Refunds', to: '/policies#returns' },
+  { label: 'Privacy Policy', to: '/privacy' },
+  { label: 'Store Policies', to: '/policies' },
+];
+
+const socialLinks = [
+  { label: 'Toy & Joy on Facebook', href: 'https://www.facebook.com/toyandjoy7', Icon: Facebook },
+  { label: 'Toy & Joy on Instagram', href: 'https://www.instagram.com/toyandjoy7', Icon: Instagram },
+  { label: 'Toy & Joy on WhatsApp', href: 'https://wa.me/923402320338', Icon: MessageCircle },
+  { label: 'Email Toy & Joy', href: 'mailto:toyandjoy007@gmail.com', Icon: Mail },
 ];
 
 export default function Footer() {
@@ -34,11 +37,13 @@ export default function Footer() {
               Toy &amp; Joy brings together wonderful toys, creative games, and playful discoveries to make childhood moments more memorable.
             </p>
             <div className="mt-5 flex gap-2">
-              {[Facebook, Instagram, MessageCircle, Mail].map((Icon, i) => (
+              {socialLinks.map(({ label, href, Icon }) => (
                 <a
-                  key={i}
-                  href="#footer"
-                  aria-label="Social link"
+                  key={label}
+                  href={href}
+                  target="_blank"
+                  rel="noreferrer"
+                  aria-label={label}
                   className="flex h-10 w-10 items-center justify-center rounded-full bg-navy-600 text-white transition hover:bg-sky-500"
                 >
                   <Icon className="h-5 w-5" />
@@ -76,15 +81,15 @@ export default function Footer() {
             <h3 className="font-heading text-base font-bold text-white">Get in Touch</h3>
             <ul className="mt-4 space-y-3">
               <li className="flex items-center gap-2 text-sm">
-                <Mail className="h-4 w-4 text-sky-400" />
-                <span>[Business Email]</span>
+                <Mail className="h-4 w-4 shrink-0 text-sky-400" />
+                <a href="mailto:toyandjoy007@gmail.com" className="transition hover:text-sky-400">toyandjoy007@gmail.com</a>
               </li>
               <li className="flex items-center gap-2 text-sm">
-                <MessageCircle className="h-4 w-4 text-sky-400" />
-                <span>WhatsApp: [Business Number]</span>
+                <MessageCircle className="h-4 w-4 shrink-0 text-sky-400" />
+                <a href="https://wa.me/923402320338" target="_blank" rel="noreferrer" className="transition hover:text-sky-400">WhatsApp: 0340 2320338</a>
               </li>
               <li className="flex items-center gap-2 text-sm">
-                <MapPin className="h-4 w-4 text-sky-400" />
+                <MapPin className="h-4 w-4 shrink-0 text-sky-400" />
                 <span>Karachi, Pakistan</span>
               </li>
             </ul>

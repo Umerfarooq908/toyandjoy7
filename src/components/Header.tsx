@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
-import { Search, User, Heart, ShoppingCart, Menu } from 'lucide-react';
+import { Search, Heart, ShoppingCart, Menu } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
 import Logo from './Logo';
 import NavigationMenu from './NavigationMenu';
@@ -88,9 +88,6 @@ export default function Header({ onMenuClick }: HeaderProps) {
         </form>
 
         <div className="ml-auto flex items-center gap-1 sm:gap-2">
-          <button className="hidden rounded-full p-2.5 text-navy-600 transition hover:bg-cream-100 sm:block" aria-label="My Account">
-            <User className="h-5 w-5" />
-          </button>
           <Link to="/shop" className="relative rounded-full p-2.5 text-navy-600 transition hover:bg-cream-100" aria-label="Wishlist">
             <Heart className="h-5 w-5" />
             {wishlist.length > 0 && (

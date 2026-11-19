@@ -6,7 +6,6 @@ import BestSellers from '@/components/BestSellers';
 import PromotionalBanner from '@/components/PromotionalBanner';
 import NewArrivals from '@/components/NewArrivals';
 import WhyChooseUs from '@/components/WhyChooseUs';
-import CustomerReviews from '@/components/CustomerReviews';
 import Newsletter from '@/components/Newsletter';
 
 export default function HomePage() {
@@ -20,7 +19,6 @@ export default function HomePage() {
       <PromotionalBanner />
       <NewArrivals />
       <WhyChooseUs />
-      <CustomerReviews />
       <Newsletter />
     </>
   );

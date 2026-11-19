@@ -80,7 +80,7 @@ export default function CartDrawer() {
                 <span className="font-heading text-base font-semibold text-navy-600">Subtotal</span>
                 <span className="font-heading text-lg font-bold text-navy-600">{formatPKR(cartTotal)}</span>
               </div>
-              <p className="mb-3 text-xs text-navy-400">Demo checkout — payment methods are shown for preview only.</p>
+              <p className="mb-3 text-xs text-navy-400">Delivery: Karachi 1–2 days, other cities 3–7 days. Delivery charges are confirmed when your order is confirmed.</p>
               <Link
                 to="/checkout"
                 onClick={() => setCartOpen(false)}

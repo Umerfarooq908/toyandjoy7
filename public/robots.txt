@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://umerfarooq908.github.io/toyandjoy7/sitemap.xml
