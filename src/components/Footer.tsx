@@ -1,4 +1,4 @@
-import { Facebook, Instagram, Mail, MapPin, MessageCircle } from 'lucide-react';
+import { Facebook, Instagram, Mail, MapPin, MessageCircle, Music2 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import Logo from './Logo';
 
@@ -19,6 +19,7 @@ const supportLinks = [
 const socialLinks = [
   { label: 'Toy & Joy on Facebook', href: 'https://www.facebook.com/toyandjoy7', Icon: Facebook },
   { label: 'Toy & Joy on Instagram', href: 'https://www.instagram.com/toyandjoy7', Icon: Instagram },
+  { label: 'Toy & Joy on TikTok', href: 'https://www.tiktok.com/@toyjoy007', Icon: Music2 },
   { label: 'Toy & Joy on WhatsApp', href: 'https://wa.me/923402320338', Icon: MessageCircle },
   { label: 'Email Toy & Joy', href: 'mailto:toyandjoy007@gmail.com', Icon: Mail },
 ];
