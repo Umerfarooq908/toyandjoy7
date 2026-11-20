@@ -1,3 +1,4 @@
+import ComingSoonBanner from '@/components/ComingSoonBanner';
 import HeroBanner from '@/components/HeroBanner';
 import TrustBenefits from '@/components/TrustBenefits';
 import CategoryGrid from '@/components/CategoryGrid';
@@ -11,6 +12,8 @@ import Newsletter from '@/components/Newsletter';
 export default function HomePage() {
   return (
     <>
+      {/* Temporary Coming Soon banner — remove when Toy & Joy goes live. */}
+      <ComingSoonBanner />
       <HeroBanner />
       <TrustBenefits />
       <CategoryGrid />
