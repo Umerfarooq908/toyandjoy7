@@ -70,13 +70,12 @@ export default function ProductCard({ product }: { product: Product }) {
           {product.stock > 0 ? (
             <><Check className="h-3.5 w-3.5" /> In Stock</>
           ) : (
-            'Out of Stock'
+            'Order now — we get it for you'
           )}
         </div>
 
         <button
           onClick={() => addToCart(product)}
-          disabled={product.stock <= 0}
           className="mt-3 flex items-center justify-center gap-2 rounded-full bg-sunshine-500 py-2.5 font-heading text-sm font-semibold text-navy-600 transition hover:bg-sunshine-400 hover:shadow-soft disabled:cursor-not-allowed disabled:opacity-50"
         >
           <ShoppingCart className="h-4 w-4" /> Add to Cart

@@ -138,7 +138,7 @@ export default function ProductDetailPage() {
               {product.stock > 0 ? (
                 <><Check className="h-4 w-4" /> In Stock ({product.stock} available)</>
               ) : (
-                'Out of Stock'
+                'Order now — we get it for you'
               )}
             </div>
 
@@ -166,7 +166,7 @@ export default function ProductDetailPage() {
                 </button>
                 <span className="w-10 text-center font-heading font-bold text-navy-600">{quantity}</span>
                 <button
-                  onClick={() => setQuantity((q) => Math.min(product.stock, q + 1))}
+                  onClick={() => setQuantity((q) => q + 1)}
                   className="rounded-full p-2.5 transition hover:bg-cream-100"
                   aria-label="Increase quantity"
                 >
@@ -179,14 +179,12 @@ export default function ProductDetailPage() {
             <div className="mt-6 flex flex-col gap-3 sm:flex-row">
               <button
                 onClick={handleAddToCart}
-                disabled={product.stock <= 0}
                 className="flex flex-1 items-center justify-center gap-2 rounded-full bg-sunshine-500 py-3.5 font-heading font-semibold text-navy-600 transition hover:bg-sunshine-400 hover:shadow-soft disabled:opacity-50"
               >
                 {added ? <><Check className="h-5 w-5" /> Added!</> : <><ShoppingCart className="h-5 w-5" /> Add to Cart</>}
               </button>
               <button
                 onClick={handleBuyNow}
-                disabled={product.stock <= 0}
                 className="flex flex-1 items-center justify-center gap-2 rounded-full bg-navy-600 py-3.5 font-heading font-semibold text-white transition hover:bg-navy-500 disabled:opacity-50"
               >
                 Buy Now <ArrowRight className="h-5 w-5" />

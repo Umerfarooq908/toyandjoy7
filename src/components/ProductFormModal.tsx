@@ -327,10 +327,10 @@ export default function ProductFormModal({
               </select>
             </div>
 
-            {/* Stock */}
+            {/* Stock — 0 means order on demand */}
             <div>
               <label className="mb-1.5 block text-xs font-bold uppercase tracking-wide text-navy-400">
-                Stock
+                Stock — 0 means order on demand
               </label>
               <input
                 type="number"
