@@ -1,27 +1,27 @@
 import { Link } from 'react-router-dom';
 import { ArrowRight, Gift } from 'lucide-react';
 
-// Eid and birthday gift bundles at the price points from the Pakistan
+// Gift ideas by budget, at the price points from the Pakistan
 // toy market report (Rs 1,500 / Rs 3,000 / Rs 5,000). Each card links
-// to the shop filtered to toys up to that price — no specific bundle
-// products or contents are claimed here.
+// to the shop filtered to toys up to that price — these are not bundle
+// products, just a way to shop gifts by budget.
 const bundles = [
   {
     amount: 1500,
-    title: 'Rs 1,500 Gift Bundle',
-    desc: 'A ready gift up to Rs 1,500 — perfect for Eid and small birthday surprises.',
+    title: 'Rs 1,500 Gifts',
+    desc: 'Shop toys up to Rs 1,500 — perfect for Eid and small birthday surprises.',
     bg: 'bg-sky-400/15',
   },
   {
     amount: 3000,
-    title: 'Rs 3,000 Gift Bundle',
-    desc: 'A ready gift up to Rs 3,000 — the Eid sweet spot for birthdays and Eidi.',
+    title: 'Rs 3,000 Gifts',
+    desc: 'Shop toys up to Rs 3,000 — the Eid sweet spot for birthdays and Eidi.',
     bg: 'bg-sunshine-500/15',
   },
   {
     amount: 5000,
-    title: 'Rs 5,000 Gift Bundle',
-    desc: 'A ready gift up to Rs 5,000 — a bigger Eid or birthday gift to remember.',
+    title: 'Rs 5,000 Gifts',
+    desc: 'Shop toys up to Rs 5,000 — a bigger Eid or birthday gift to remember.',
     bg: 'bg-pink-400/15',
   },
 ];
@@ -32,10 +32,10 @@ export default function GiftBundles() {
       <div className="mx-auto max-w-7xl px-4 lg:px-8">
         <div className="mb-10 text-center">
           <h2 className="font-heading text-3xl font-bold text-navy-600 sm:text-4xl">
-            Gift Bundles for Eid &amp; Birthdays
+            Gift Ideas for Eid &amp; Birthdays
           </h2>
           <p className="mt-3 text-navy-400">
-            Pick a price, and shop toys up to that amount — ready to gift.
+            Pick a price, and shop toys up to that amount.
           </p>
         </div>
 

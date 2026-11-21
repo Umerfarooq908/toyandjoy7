@@ -1,4 +1,3 @@
-import ComingSoonBanner from '@/components/ComingSoonBanner';
 import HeroBanner from '@/components/HeroBanner';
 import TrustBenefits from '@/components/TrustBenefits';
 import CategoryGrid from '@/components/CategoryGrid';
@@ -8,13 +7,10 @@ import GiftBundles from '@/components/GiftBundles';
 import PromotionalBanner from '@/components/PromotionalBanner';
 import NewArrivals from '@/components/NewArrivals';
 import WhyChooseUs from '@/components/WhyChooseUs';
-import Newsletter from '@/components/Newsletter';
 
 export default function HomePage() {
   return (
     <>
-      {/* Temporary Coming Soon banner — remove when Toy & Joy goes live. */}
-      <ComingSoonBanner />
       <HeroBanner />
       <TrustBenefits />
       <CategoryGrid />
@@ -24,7 +20,6 @@ export default function HomePage() {
       <PromotionalBanner />
       <NewArrivals />
       <WhyChooseUs />
-      <Newsletter />
     </>
   );
 }

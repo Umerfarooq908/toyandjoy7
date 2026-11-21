@@ -1,4 +1,4 @@
-import { Heart, ShoppingCart, Star, Check } from 'lucide-react';
+import { Heart, ShoppingCart, Check } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import type { Product } from '@/data/types';
 import { useShop, formatPKR } from '@/context/ShopContext';
@@ -50,14 +50,6 @@ export default function ProductCard({ product }: { product: Product }) {
         <Link to={`/product/${product.slug}`}>
           <h3 className="mt-1 font-heading text-sm font-bold leading-snug text-navy-600 transition hover:text-sky-500">{product.name}</h3>
         </Link>
-
-        {product.rating && (
-          <div className="mt-1.5 flex items-center gap-1">
-            <Star className="h-3.5 w-3.5 fill-sunshine-500 text-sunshine-500" />
-            <span className="text-xs font-semibold text-navy-600">{product.rating}</span>
-            <span className="text-xs text-navy-400">({product.reviews})</span>
-          </div>
-        )}
 
         <div className="mt-2 flex items-baseline gap-2">
           <span className="font-heading text-lg font-bold text-navy-600">{formatPKR(product.price)}</span>

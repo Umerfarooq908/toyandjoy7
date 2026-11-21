@@ -88,7 +88,7 @@ export default function Header({ onMenuClick }: HeaderProps) {
         </form>
 
         <div className="ml-auto flex items-center gap-1 sm:gap-2">
-          <Link to="/shop" className="relative rounded-full p-2.5 text-navy-600 transition hover:bg-cream-100" aria-label="Wishlist">
+          <Link to="/wishlist" className="relative rounded-full p-2.5 text-navy-600 transition hover:bg-cream-100" aria-label="Wishlist">
             <Heart className="h-5 w-5" />
             {wishlist.length > 0 && (
               <span className="absolute right-1 top-1 flex h-4 w-4 items-center justify-center rounded-full bg-pink-500 text-[10px] font-bold text-white">

@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
-import { Heart, ShoppingCart, Star, Check, Minus, Plus, Shield, Truck, RotateCcw, ArrowRight } from 'lucide-react';
+import { Heart, ShoppingCart, Check, Minus, Plus, Banknote, Truck, RotateCcw, ArrowRight } from 'lucide-react';
 import Breadcrumb from '@/components/Breadcrumb';
 import ProductCard from '@/components/ProductCard';
 import { useProduct, useRelatedProducts } from '@/hooks/useCatalog';
@@ -112,21 +112,6 @@ export default function ProductDetailPage() {
             <p className="text-sm font-semibold uppercase tracking-wide text-sky-500">{product.category_name}</p>
             <h1 className="mt-1 font-heading text-3xl font-bold text-navy-600 sm:text-4xl">{product.name}</h1>
 
-            {product.rating && (
-              <div className="mt-3 flex items-center gap-2">
-                <div className="flex gap-0.5">
-                  {Array.from({ length: 5 }).map((_, i) => (
-                    <Star
-                      key={i}
-                      className={`h-5 w-5 ${i < Math.floor(product.rating!) ? 'fill-sunshine-500 text-sunshine-500' : 'text-cream-200'}`}
-                    />
-                  ))}
-                </div>
-                <span className="text-sm font-semibold text-navy-600">{product.rating}</span>
-                <span className="text-sm text-navy-400">({product.reviews} reviews)</span>
-              </div>
-            )}
-
             <div className="mt-4 flex items-baseline gap-3">
               <span className="font-heading text-3xl font-bold text-navy-600">{formatPKR(product.price)}</span>
               {product.original_price && (
@@ -205,8 +190,8 @@ export default function ProductDetailPage() {
                 <span className="text-xs font-semibold text-navy-500">Nationwide Delivery</span>
               </div>
               <div className="flex flex-col items-center gap-2 text-center">
-                <Shield className="h-6 w-6 text-grass-500" />
-                <span className="text-xs font-semibold text-navy-500">Secure Checkout</span>
+                <Banknote className="h-6 w-6 text-grass-500" />
+                <span className="text-xs font-semibold text-navy-500">Cash on Delivery</span>
               </div>
               <div className="flex flex-col items-center gap-2 text-center">
                 <RotateCcw className="h-6 w-6 text-orange-500" />
