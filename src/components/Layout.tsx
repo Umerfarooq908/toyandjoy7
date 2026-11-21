@@ -5,6 +5,7 @@ import Header from '@/components/Header';
 import MobileMenu from '@/components/MobileMenu';
 import Footer from '@/components/Footer';
 import CartDrawer from '@/components/CartDrawer';
+import WhatsAppButton from '@/components/WhatsAppButton';
 
 export default function Layout() {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -25,6 +26,7 @@ export default function Layout() {
       </main>
       <Footer />
       <CartDrawer />
+      <WhatsAppButton />
     </div>
   );
 }

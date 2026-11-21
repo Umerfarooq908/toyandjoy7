@@ -44,10 +44,10 @@ export default function ContactPage() {
         <div className="mt-8 rounded-2xl border border-cream-200 bg-white p-6 shadow-soft">
           <h2 className="font-heading text-lg font-bold text-navy-600">Follow Us</h2>
           <div className="mt-4 flex flex-wrap gap-3">
-            <a href="https://www.facebook.com/toyandjoy7" target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 rounded-full bg-navy-600 px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-navy-500">
+            <a href="https://www.facebook.com/profile.php?id=61596080008458" target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 rounded-full bg-navy-600 px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-navy-500">
               <Facebook className="h-4 w-4" /> Facebook
             </a>
-            <a href="https://www.instagram.com/toyandjoy7" target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 rounded-full bg-pink-500 px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-pink-400">
+            <a href="https://www.instagram.com/toyandjoy007" target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 rounded-full bg-pink-500 px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-pink-400">
               <Instagram className="h-4 w-4" /> Instagram
             </a>
             <a href="https://www.tiktok.com/@toyjoy007" target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 rounded-full bg-navy-600 px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-navy-500">

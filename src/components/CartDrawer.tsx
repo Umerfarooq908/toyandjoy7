@@ -80,6 +80,23 @@ export default function CartDrawer() {
                 <span className="font-heading text-base font-semibold text-navy-600">Subtotal</span>
                 <span className="font-heading text-lg font-bold text-navy-600">{formatPKR(cartTotal)}</span>
               </div>
+              {cartTotal >= 3000 ? (
+                <p className="mb-3 text-xs font-semibold text-grass-500">
+                  You have free delivery on this order!
+                </p>
+              ) : (
+                <div className="mb-3">
+                  <p className="mb-1.5 text-xs text-navy-400">
+                    Add {formatPKR(3000 - cartTotal)} more for free delivery.
+                  </p>
+                  <div className="h-2 overflow-hidden rounded-full bg-cream-100">
+                    <div
+                      className="h-full rounded-full bg-grass-500 transition-all"
+                      style={{ width: `${Math.min(100, Math.round((cartTotal / 3000) * 100))}%` }}
+                    />
+                  </div>
+                </div>
+              )}
               <p className="mb-3 text-xs text-navy-400">Delivery: Karachi 1–2 days, other cities 3–7 days. Delivery charges are confirmed when your order is confirmed.</p>
               <Link
                 to="/checkout"

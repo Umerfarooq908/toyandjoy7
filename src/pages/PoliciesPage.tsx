@@ -14,6 +14,7 @@ export default function PoliciesPage() {
     <div className="bg-cream-50 py-12">
       <div className="mx-auto max-w-3xl px-4 lg:px-8">
         <h1 className="font-heading text-3xl font-bold text-navy-600 sm:text-4xl">Store Policies</h1>
+        <p className="mt-2 text-sm text-navy-400">Last updated: 21 November 2026</p>
 
         <div className="mt-6 space-y-8 leading-relaxed text-navy-500">
           <section>
@@ -30,7 +31,8 @@ export default function PoliciesPage() {
             <h2 className="font-heading text-xl font-bold text-navy-600">Delivery</h2>
             <p className="mt-2">
               Toy &amp; Joy delivers across Pakistan. Estimated delivery time is 1–2 days in
-              Karachi and 3–7 days in other cities after order confirmation. Delivery charges
+              Karachi and 3–7 days in other cities after order confirmation. Delivery is
+              free on orders over Rs 3,000. For smaller orders, delivery charges
               are confirmed when we contact you to confirm your order. Delivery times may
               change due to courier or other circumstances.
             </p>
