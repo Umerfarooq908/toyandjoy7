@@ -25,14 +25,21 @@ export default function ShopPage() {
   const sort = searchParams.get('sort') ?? 'newest';
 
   const [searchInput, setSearchInput] = useState(query);
-  const [priceMin, setPriceMin] = useState('');
-  const [priceMax, setPriceMax] = useState('');
+  // Price filters can be set from the URL (used by the Gift Bundles
+  // section, e.g. /shop?price_max=3000).
+  const [priceMin, setPriceMin] = useState(searchParams.get('price_min') ?? '');
+  const [priceMax, setPriceMax] = useState(searchParams.get('price_max') ?? '');
   const [inStockOnly, setInStockOnly] = useState(false);
   const [showFilters, setShowFilters] = useState(false);
 
   useEffect(() => {
     setSearchInput(query);
   }, [query]);
+
+  useEffect(() => {
+    setPriceMin(searchParams.get('price_min') ?? '');
+    setPriceMax(searchParams.get('price_max') ?? '');
+  }, [searchParams]);
 
   const setParam = (key: string, value: string) => {
     const next = new URLSearchParams(searchParams);

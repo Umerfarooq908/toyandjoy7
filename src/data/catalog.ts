@@ -12,6 +12,7 @@ export const navLinks = [
 
 export const categoryDropdown = [
   { label: 'Remote Control Cars', slug: 'remote-control-cars' },
+  { label: 'Ride-On Toys', slug: 'ride-on-toys' },
   { label: 'Toy Cars & Vehicles', slug: 'toy-cars-vehicles' },
   { label: 'Dolls & Dollhouses', slug: 'dolls-dollhouses' },
   { label: 'Teddy Bears & Plush Toys', slug: 'teddy-bears-plush' },
@@ -28,7 +29,7 @@ export const ageDropdown = [
   { label: '3–5 Years', value: '3-5' },
   { label: '6–8 Years', value: '6-8' },
   { label: '9–12 Years', value: '9-12' },
-  { label: '13+ Years', value: '13+' },
+  { label: '13–15 Years', value: '13-15' },
 ];
 
 export const ageGroups = [
@@ -36,5 +37,5 @@ export const ageGroups = [
   { label: '3–5 Years', value: '3-5' },
   { label: '6–8 Years', value: '6-8' },
   { label: '9–12 Years', value: '9-12' },
-  { label: '13+ Years', value: '13+' },
+  { label: '13–15 Years', value: '13-15' },
 ];

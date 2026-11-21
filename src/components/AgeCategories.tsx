@@ -7,7 +7,7 @@ const ageImages: Record<string, string> = {
   '3-5': 'https://images.pexels.com/photos/7491112/pexels-photo-7491112.jpeg?auto=compress&cs=tinysrgb&h=650&w=940',
   '6-8': 'https://images.pexels.com/photos/3661452/pexels-photo-3661452.jpeg?auto=compress&cs=tinysrgb&h=650&w=940',
   '9-12': 'https://images.pexels.com/photos/15250000/pexels-photo-15250000.jpeg?auto=compress&cs=tinysrgb&h=650&w=940',
-  '13+': 'https://images.pexels.com/photos/3697812/pexels-photo-3697812.jpeg?auto=compress&cs=tinysrgb&h=650&w=940',
+  '13-15': 'https://images.pexels.com/photos/3697812/pexels-photo-3697812.jpeg?auto=compress&cs=tinysrgb&h=650&w=940',
 };
 
 const ageBgs: Record<string, string> = {
@@ -15,7 +15,7 @@ const ageBgs: Record<string, string> = {
   '3-5': 'bg-sunshine-500/15',
   '6-8': 'bg-sky-400/15',
   '9-12': 'bg-grass-500/15',
-  '13+': 'bg-lavender-300/40',
+  '13-15': 'bg-lavender-300/40',
 };
 
 const ageSubs: Record<string, string> = {
@@ -23,7 +23,7 @@ const ageSubs: Record<string, string> = {
   '3-5': 'Early Learning',
   '6-8': 'Creative Play',
   '9-12': 'Games & Adventures',
-  '13+': 'Hobbies & Challenges',
+  '13-15': 'Hobbies & Challenges',
 };
 
 export default function AgeCategories() {

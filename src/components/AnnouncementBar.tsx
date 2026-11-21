@@ -3,6 +3,7 @@ import { X, Sparkles } from 'lucide-react';
 
 const messages = [
   'Welcome to Toy & Joy — Where Every Toy Brings a Smile!',
+  'Free delivery on orders over Rs 3,000!',
   'Discover Toys Delivered Across Pakistan!',
   'Little Toys, Big Joys!',
 ];

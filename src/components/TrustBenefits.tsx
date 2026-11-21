@@ -1,7 +1,7 @@
 import { Truck, Gift, Wallet, Headset } from 'lucide-react';
 
 const benefits = [
-  { icon: Truck, bg: 'bg-sky-500', title: 'Nationwide Delivery', desc: 'Bringing happiness across Pakistan.' },
+  { icon: Truck, bg: 'bg-sky-500', title: 'Nationwide Delivery', desc: 'Free delivery on orders over Rs 3,000, across Pakistan.' },
   { icon: Gift, bg: 'bg-pink-500', title: 'Carefully Packed', desc: 'Packed with care for every order.' },
   { icon: Wallet, bg: 'bg-grass-500', title: 'Convenient Payments', desc: 'Simple and convenient checkout.' },
   { icon: Headset, bg: 'bg-orange-500', title: 'Friendly Support', desc: 'Here to help with your questions.' },

@@ -384,7 +384,7 @@ export default function CheckoutPage() {
                   <span className="font-heading text-xl font-bold text-navy-600">{formatPKR(finalTotal)}</span>
                 </div>
                 <p className="pt-1 text-xs leading-relaxed text-navy-400">
-                  Delivery charges will be confirmed when we contact you to confirm your order. Delivery: Karachi 1–2 days, other cities 3–7 days.
+                  Free delivery on orders over Rs 3,000. Delivery charges for smaller orders will be confirmed when we contact you to confirm your order. Delivery: Karachi 1–2 days, other cities 3–7 days.
                 </p>
               </div>
 

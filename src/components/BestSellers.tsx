@@ -3,6 +3,37 @@ import { ArrowRight } from 'lucide-react';
 import { useProducts } from '@/hooks/useCatalog';
 import ProductCard from './ProductCard';
 
+// Top-selling categories from the Pakistan toy market report —
+// RC cars, dolls, building blocks and ride-ons. These link to the
+// shop filtered by category; no specific products, prices or sales
+// figures are claimed here.
+const bestSellerCategories = [
+  {
+    label: 'Remote Control Cars',
+    slug: 'remote-control-cars',
+    desc: 'Fast, fun RC cars for every age.',
+    bg: 'bg-sky-400/15',
+  },
+  {
+    label: 'Dolls & Dollhouses',
+    slug: 'dolls-dollhouses',
+    desc: 'Dolls, dollhouses and pretend play.',
+    bg: 'bg-pink-400/15',
+  },
+  {
+    label: 'Building Blocks',
+    slug: 'building-blocks',
+    desc: 'Blocks and construction sets to build and create.',
+    bg: 'bg-sunshine-500/15',
+  },
+  {
+    label: 'Ride-On Toys',
+    slug: 'ride-on-toys',
+    desc: 'Ride-on cars and bikes — available on pre-order.',
+    bg: 'bg-grass-500/15',
+  },
+];
+
 export default function BestSellers() {
   const { products, loading } = useProducts({ limit: 8 });
 
@@ -18,9 +49,25 @@ export default function BestSellers() {
       <div className="mx-auto max-w-7xl px-4 lg:px-8">
         <div className="mb-10 text-center">
           <h2 className="font-heading text-3xl font-bold text-navy-600 sm:text-4xl">
-            Most Loved by Little Ones!
+            Best Sellers
           </h2>
-          <p className="mt-3 text-navy-400">Discover popular toys chosen by families.</p>
+          <p className="mt-3 text-navy-400">RC cars, dolls, building blocks and ride-ons — the toys families ask for most.</p>
+        </div>
+
+        <div className="mb-10 grid grid-cols-2 gap-4 lg:grid-cols-4">
+          {bestSellerCategories.map((cat) => (
+            <Link
+              key={cat.slug}
+              to={`/shop?category=${cat.slug}`}
+              className={`group rounded-3xl ${cat.bg} p-5 text-center transition hover:-translate-y-1 hover:shadow-card`}
+            >
+              <h3 className="font-heading text-base font-bold text-navy-600 sm:text-lg">{cat.label}</h3>
+              <p className="mt-1 text-xs text-navy-400 sm:text-sm">{cat.desc}</p>
+              <span className="mt-3 inline-flex items-center gap-1 rounded-full bg-navy-600 px-4 py-1.5 text-xs font-semibold text-white transition hover:bg-navy-500">
+                Shop Now <ArrowRight className="h-3 w-3" />
+              </span>
+            </Link>
+          ))}
         </div>
 
         {loading ? (
