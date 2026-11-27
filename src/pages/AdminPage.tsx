@@ -6,18 +6,29 @@ import {
   ShoppingBag, IndianRupee, Trophy,
 } from 'lucide-react';
 import { supabase } from '@/lib/supabase';
-import { useAuth } from '@/context/AuthContext';
+import { useAuth, ADMIN_EMAIL, isAdminUser } from '@/context/AuthContext';
 import type { Product } from '@/data/types';
 import { formatPKR } from '@/context/ShopContext';
 import ProductFormModal from '@/components/ProductFormModal';
 
 type ProductRow = Omit<Product, 'created_at'> & { created_at: string };
 
+const ORDER_STATUSES = ['pending', 'confirmed', 'shipped', 'delivered', 'cancelled'] as const;
+
 interface OrderRow {
   id: string;
   customer_name: string;
+  customer_mobile: string;
+  customer_email: string | null;
+  shipping_address: string;
+  city: string;
+  province: string;
+  postal_code: string | null;
+  payment_method: string;
+  subtotal: number;
   total: number;
   status: string;
+  notes: string | null;
   created_at: string;
 }
 
@@ -40,7 +51,7 @@ interface TopProduct {
 }
 
 export default function AdminPage() {
-  const { session, loading, signOut } = useAuth();
+  const { session, user, loading, signOut } = useAuth();
   const [products, setProducts] = useState<ProductRow[]>([]);
   const [fetching, setFetching] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -53,6 +64,16 @@ export default function AdminPage() {
   const [deleteError, setDeleteError] = useState<string | null>(null);
   const [orders, setOrders] = useState<OrderRow[]>([]);
   const [orderItems, setOrderItems] = useState<OrderItemRow[]>([]);
+  const [selectedOrderId, setSelectedOrderId] = useState<string | null>(null);
+  const [updatingOrderId, setUpdatingOrderId] = useState<string | null>(null);
+
+  // Only the store admin may use this page. Any other signed-in user is
+  // signed out by AuthContext; this is a second check in the page itself.
+  useEffect(() => {
+    if (!loading && session && !isAdminUser(user)) {
+      void signOut();
+    }
+  }, [loading, session, user, signOut]);
 
   const fetchProducts = useCallback(async () => {
     setFetching(true);
@@ -214,6 +235,34 @@ export default function AdminPage() {
     setDeleteTarget(null);
   };
 
+  const handleOrderStatusChange = async (orderId: string, newStatus: string) => {
+    setUpdatingOrderId(orderId);
+    setError(null);
+    const { error: err } = await supabase
+      .from('orders')
+      .update({ status: newStatus })
+      .eq('id', orderId);
+    setUpdatingOrderId(null);
+    if (err) {
+      setError(err.message);
+      return;
+    }
+    setOrders((prev) =>
+      prev.map((o) => (o.id === orderId ? { ...o, status: newStatus } : o)),
+    );
+  };
+
+  // WhatsApp link for confirming an order with the customer.
+  const whatsappLink = (mobile: string) => {
+    const digits = mobile.replace(/[^0-9]/g, '');
+    const intl = digits.startsWith('92')
+      ? digits
+      : digits.startsWith('0')
+        ? `92${digits.slice(1)}`
+        : digits;
+    return `https://wa.me/${intl}`;
+  };
+
   if (loading) {
     return (
       <div className="flex min-h-screen items-center justify-center bg-navy-700">
@@ -223,6 +272,20 @@ export default function AdminPage() {
   }
 
   if (!session) return <Navigate to="/admin/login" replace />;
+
+  if (!isAdminUser(user)) {
+    return (
+      <div className="flex min-h-screen flex-col items-center justify-center bg-cream-50 px-4 text-center">
+        <p className="font-heading text-2xl font-bold text-navy-600">Access denied</p>
+        <p className="mt-2 text-sm text-navy-400">
+          Only the store admin ({ADMIN_EMAIL}) can use this page.
+        </p>
+        <Link to="/" className="mt-6 rounded-full bg-sky-500 px-6 py-2.5 font-heading text-sm font-bold text-white transition hover:bg-sky-400">
+          Back to store
+        </Link>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-cream-50 font-body">
@@ -332,13 +395,119 @@ export default function AdminPage() {
           )}
         </div>
 
+        {/* Orders */}
+        <div className="mb-8 rounded-3xl border border-cream-200 bg-white p-6 shadow-soft">
+          <div className="mb-4 flex items-center gap-2">
+            <ShoppingBag className="h-5 w-5 text-sky-500" />
+            <h2 className="font-heading text-lg font-bold text-navy-600">Orders</h2>
+            <span className="rounded-full bg-cream-100 px-3 py-1 text-xs font-bold text-navy-500">
+              {orders.length} total
+            </span>
+          </div>
+          {orders.length === 0 ? (
+            <p className="py-6 text-center text-sm text-navy-400">
+              No orders yet. Once a customer places an order, it will appear here.
+            </p>
+          ) : (
+            <div className="space-y-3">
+              {orders.map((order) => {
+                const items = orderItems.filter((i) => i.order_id === order.id);
+                const open = selectedOrderId === order.id;
+                return (
+                  <div key={order.id} className="rounded-2xl border border-cream-200">
+                    <button
+                      onClick={() => setSelectedOrderId(open ? null : order.id)}
+                      className="flex w-full flex-wrap items-center gap-3 px-4 py-3 text-left transition hover:bg-cream-50"
+                    >
+                      <span className="font-heading text-sm font-bold text-navy-600">
+                        {order.customer_name}
+                      </span>
+                      <span className="text-xs text-navy-400">{order.customer_mobile}</span>
+                      <span className="text-xs text-navy-400">{order.city}</span>
+                      <span className="text-xs font-bold text-navy-600">{formatPKR(order.total)}</span>
+                      <span className="rounded-full bg-sky-500/15 px-2.5 py-1 text-[11px] font-bold uppercase text-sky-500">
+                        {order.status}
+                      </span>
+                      <span className="ml-auto text-xs text-navy-400">
+                        {new Date(order.created_at).toLocaleDateString('en-PK')}
+                        {open ? ' ▲' : ' ▼'}
+                      </span>
+                    </button>
+                    {open && (
+                      <div className="border-t border-cream-200 px-4 py-4 text-sm">
+                        <p className="text-xs font-bold uppercase tracking-wide text-navy-400">
+                          Order number: {order.id.slice(0, 8).toUpperCase()}
+                        </p>
+                        <div className="mt-3 grid gap-2 sm:grid-cols-2">
+                          <p><span className="font-semibold text-navy-600">Customer:</span> {order.customer_name}</p>
+                          <p>
+                            <span className="font-semibold text-navy-600">Mobile:</span>{' '}
+                            <a href={whatsappLink(order.customer_mobile)} target="_blank" rel="noreferrer" className="font-semibold text-grass-500 hover:underline">
+                              {order.customer_mobile} (WhatsApp)
+                            </a>
+                          </p>
+                          {order.customer_email && (
+                            <p><span className="font-semibold text-navy-600">Email:</span> {order.customer_email}</p>
+                          )}
+                          <p><span className="font-semibold text-navy-600">Payment:</span> {order.payment_method}</p>
+                          <p className="sm:col-span-2">
+                            <span className="font-semibold text-navy-600">Address:</span>{' '}
+                            {order.shipping_address}, {order.city}, {order.province}
+                            {order.postal_code ? ` ${order.postal_code}` : ''}
+                          </p>
+                          {order.notes && (
+                            <p className="sm:col-span-2">
+                              <span className="font-semibold text-navy-600">Order notes:</span> {order.notes}
+                            </p>
+                          )}
+                        </div>
+                        <h3 className="mt-4 font-heading text-sm font-bold text-navy-600">Items</h3>
+                        {items.length === 0 ? (
+                          <p className="mt-1 text-sm text-navy-400">No items saved for this order.</p>
+                        ) : (
+                          <ul className="mt-2 space-y-2">
+                            {items.map((item) => (
+                              <li key={item.id} className="flex items-center gap-3">
+                                <img src={item.image} alt="" className="h-10 w-10 rounded-lg object-cover" />
+                                <span className="flex-1 font-semibold text-navy-600">{item.product_name}</span>
+                                <span className="text-navy-400">x{item.quantity}</span>
+                                <span className="font-bold text-navy-600">{formatPKR(item.line_total)}</span>
+                              </li>
+                            ))}
+                          </ul>
+                        )}
+                        <div className="mt-4 flex flex-wrap items-center gap-3">
+                          <label className="text-sm font-semibold text-navy-600">Status:</label>
+                          <select
+                            value={order.status}
+                            disabled={updatingOrderId === order.id}
+                            onChange={(e) => void handleOrderStatusChange(order.id, e.target.value)}
+                            className="rounded-full border border-cream-200 bg-white px-4 py-2 text-sm font-semibold text-navy-600 outline-none focus:border-sky-500"
+                          >
+                            {ORDER_STATUSES.map((s) => (
+                              <option key={s} value={s}>{s}</option>
+                            ))}
+                          </select>
+                          {updatingOrderId === order.id && (
+                            <span className="text-xs text-navy-400">Updating…</span>
+                          )}
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                );
+              })}
+            </div>
+          )}
+        </div>
+
         {/* Product Stats */}
         <div className="mb-8 grid grid-cols-2 gap-4 lg:grid-cols-5">
           <StatCard icon={Package} label="Total Products" value={stats.total} color="sky" />
           <StatCard icon={Eye} label="Visible" value={stats.active} color="grass" />
           <StatCard icon={EyeOff} label="Hidden" value={stats.inactive} color="navy" />
           <StatCard icon={AlertTriangle} label="Low Stock" value={stats.lowStock} color="sunshine" />
-          <StatCard icon={AlertTriangle} label="Out of Stock" value={stats.outOfStock} color="pink" />
+          <StatCard icon={AlertTriangle} label="Order on Demand" value={stats.outOfStock} color="pink" />
         </div>
 
         {error && (

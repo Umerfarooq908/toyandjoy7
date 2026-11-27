@@ -1,21 +1,16 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { Navigate, Link } from 'react-router-dom';
 import { Lock, Mail, Eye, EyeOff, ArrowRight } from 'lucide-react';
 import { useAuth } from '@/context/AuthContext';
 import Logo from '@/components/Logo';
 
 export default function AdminLoginPage() {
-  const { session, loading, signIn, signUp } = useAuth();
-  const [mode, setMode] = useState<'signin' | 'signup'>('signin');
+  const { session, loading, signIn } = useAuth();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPw, setShowPw] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
-
-  useEffect(() => {
-    setError(null);
-  }, [mode]);
 
   if (loading) {
     return (
@@ -31,8 +26,7 @@ export default function AdminLoginPage() {
     e.preventDefault();
     setError(null);
     setBusy(true);
-    const fn = mode === 'signin' ? signIn : signUp;
-    const { error: err } = await fn(email.trim(), password);
+    const { error: err } = await signIn(email.trim(), password);
     setBusy(false);
     if (err) {
       setError(err);
@@ -51,12 +45,10 @@ export default function AdminLoginPage() {
             <Logo />
           </div>
           <h1 className="mt-5 font-heading text-2xl font-bold text-white">
-            {mode === 'signin' ? 'Admin Sign In' : 'Create Admin Account'}
+            Admin Sign In
           </h1>
           <p className="mt-1 text-sm text-navy-400">
-            {mode === 'signin'
-              ? 'Manage your store catalog, prices, and stock.'
-              : 'Set up your store admin account to get started.'}
+            Manage your store catalog, prices, and stock.
           </p>
         </div>
 
@@ -117,30 +109,16 @@ export default function AdminLoginPage() {
             >
               {busy ? 'Please wait…' : (
                 <>
-                  {mode === 'signin' ? 'Sign In' : 'Create Account'}
+                  Sign In
                   <ArrowRight className="h-4 w-4" />
                 </>
               )}
             </button>
           </form>
 
-          <div className="mt-6 text-center text-sm text-navy-400">
-            {mode === 'signin' ? (
-              <>
-                Don&apos;t have an account?{' '}
-                <button onClick={() => setMode('signup')} className="font-bold text-sky-400 transition hover:text-sky-500">
-                  Create one
-                </button>
-              </>
-            ) : (
-              <>
-                Already have an account?{' '}
-                <button onClick={() => setMode('signin')} className="font-bold text-sky-400 transition hover:text-sky-500">
-                  Sign in
-                </button>
-              </>
-            )}
-          </div>
+          <p className="mt-6 text-center text-sm text-navy-400">
+            Only the store admin account can sign in here.
+          </p>
         </div>
 
         <div className="mt-6 text-center">

@@ -12,7 +12,7 @@ const PAYMENT_METHODS = [
   { id: 'bank', label: 'Bank Transfer', icon: CreditCard, desc: 'Bank account details will be shared when Toy & Joy contacts you to confirm your order', available: true },
   { id: 'easypaisa', label: 'Easypaisa', icon: Smartphone, desc: 'Payment details will be shared when Toy & Joy contacts you to confirm your order', available: true },
   { id: 'jazzcash', label: 'JazzCash', icon: Wallet, desc: 'Payment details will be shared when Toy & Joy contacts you to confirm your order', available: true },
-  { id: 'card', label: 'Card Payment', icon: CreditCard, desc: 'Credit / Debit card — payment details will be shared when Toy & Joy contacts you to confirm your order', available: true },
+  { id: 'card', label: 'Card Payment (manual)', icon: CreditCard, desc: 'Credit / Debit card — we will share the payment details when Toy & Joy contacts you to confirm your order. No card payment is taken on this website.', available: true },
 ];
 
 export default function CheckoutPage() {
@@ -32,6 +32,7 @@ export default function CheckoutPage() {
   const [paymentMethod, setPaymentMethod] = useState('cod');
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [orderPlaced, setOrderPlaced] = useState(false);
+  const [placedOrderId, setPlacedOrderId] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
   const [orderError, setOrderError] = useState<string | null>(null);
 
@@ -45,7 +46,7 @@ export default function CheckoutPage() {
     if (!form.address.trim()) e.address = 'Street address is required';
     if (!form.city.trim()) e.city = 'City is required';
     if (!form.province) e.province = 'Province is required';
-    if (!form.postalCode.trim()) e.postalCode = 'Postal code is required';
+    // Postal code is optional — many customers do not know theirs.
     setErrors(e);
     return Object.keys(e).length === 0;
   };
@@ -60,31 +61,51 @@ export default function CheckoutPage() {
     setSubmitting(true);
     setOrderError(null);
 
-    const { data: orderData, error: orderError2 } = await supabase
+    const orderPayload = {
+      customer_name: form.fullName,
+      customer_mobile: form.mobile,
+      customer_email: form.email || null,
+      shipping_address: form.address,
+      city: form.city,
+      province: form.province,
+      postal_code: form.postalCode.trim() || '',
+      payment_method: paymentMethod,
+      subtotal: cartTotal,
+      discount: 0,
+      shipping_cost: 0,
+      total: finalTotal,
+      status: 'pending',
+    };
+
+    // Order notes are saved in the orders.notes column (migration
+    // 20261121). If that column does not exist yet in the live database,
+    // retry without it so checkout still works.
+    let orderData: { id: string } | null = null;
+    let orderError2: { message: string } | null = null;
+    const firstTry = await supabase
       .from('orders')
-      .insert({
-        customer_name: form.fullName,
-        customer_mobile: form.mobile,
-        customer_email: form.email || null,
-        shipping_address: form.address,
-        city: form.city,
-        province: form.province,
-        postal_code: form.postalCode,
-        payment_method: paymentMethod,
-        subtotal: cartTotal,
-        discount: 0,
-        shipping_cost: 0,
-        total: finalTotal,
-        status: 'pending',
-      })
+      .insert({ ...orderPayload, notes: form.notes.trim() || null })
       .select('id')
       .single();
+    if (firstTry.error && firstTry.error.message.includes('notes')) {
+      const retry = await supabase
+        .from('orders')
+        .insert(orderPayload)
+        .select('id')
+        .single();
+      orderData = retry.data;
+      orderError2 = retry.error;
+    } else {
+      orderData = firstTry.data;
+      orderError2 = firstTry.error;
+    }
 
     if (orderError2 || !orderData) {
       setSubmitting(false);
       setOrderError(orderError2?.message ?? 'Could not place your order. Please try again.');
       return;
     }
+    setPlacedOrderId(orderData.id);
 
     const orderItems = cart.map((item) => ({
       order_id: orderData.id,
@@ -121,11 +142,18 @@ export default function CheckoutPage() {
           <h1 className="font-heading text-3xl font-bold text-navy-600 sm:text-4xl">Order Confirmed!</h1>
           <p className="mt-3 text-navy-400">
             Thank you for your order. Toy &amp; Joy will contact you shortly to confirm your order and share the payment details.
+            Please quote your order number above when you contact us.
             Delivery takes 1–2 days in Karachi and 3–7 days in other cities.
           </p>
           <div className="mt-8 rounded-2xl border border-cream-200 bg-white p-6 text-left shadow-soft">
             <h2 className="mb-4 font-heading text-lg font-bold text-navy-600">Order Summary</h2>
             <div className="space-y-2 text-sm">
+              {placedOrderId && (
+                <div className="flex justify-between">
+                  <span className="text-navy-400">Order Number</span>
+                  <span className="font-semibold text-navy-600">{placedOrderId.slice(0, 8).toUpperCase()}</span>
+                </div>
+              )}
               <div className="flex justify-between">
                 <span className="text-navy-400">Customer</span>
                 <span className="font-semibold text-navy-600">{form.fullName}</span>
@@ -283,7 +311,7 @@ export default function CheckoutPage() {
                   {errors.province && <p className="mt-1 text-xs text-pink-500">{errors.province}</p>}
                 </div>
                 <div>
-                  <label className="mb-1 block text-sm font-semibold text-navy-600">Postal Code *</label>
+                  <label className="mb-1 block text-sm font-semibold text-navy-600">Postal Code (optional)</label>
                   <input
                     type="text"
                     value={form.postalCode}
@@ -338,7 +366,7 @@ export default function CheckoutPage() {
                 ))}
               </div>
               <p className="mt-4 text-xs leading-relaxed text-navy-400">
-                For Bank Transfer, Easypaisa, JazzCash and Card payments, Toy &amp; Joy will share the payment details with you when we contact you to confirm your order.
+                For Bank Transfer, Easypaisa, JazzCash and Card payments, Toy &amp; Joy will share the payment details with you when we contact you to confirm your order. Card payment is manual — no card payment is taken on this website.
               </p>
             </section>
           </div>
