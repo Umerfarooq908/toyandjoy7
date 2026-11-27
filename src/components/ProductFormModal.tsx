@@ -52,8 +52,6 @@ export default function ProductFormModal({
   const [image, setImage] = useState('');
   const [categorySlug, setCategorySlug] = useState('');
   const [ageGroup, setAgeGroup] = useState('');
-  const [rating, setRating] = useState('');
-  const [reviews, setReviews] = useState('');
   const [stock, setStock] = useState('');
   const [badge, setBadge] = useState('');
   const [description, setDescription] = useState('');
@@ -78,8 +76,6 @@ export default function ProductFormModal({
       setImage(product.image);
       setCategorySlug(product.category_slug);
       setAgeGroup(product.age_group ?? '');
-      setRating(product.rating ? String(product.rating) : '');
-      setReviews(String(product.reviews));
       setStock(String(product.stock));
       setBadge(product.badge ?? '');
       setDescription(product.description ?? '');
@@ -93,8 +89,6 @@ export default function ProductFormModal({
       setImage('');
       setCategorySlug('');
       setAgeGroup('');
-      setRating('');
-      setReviews('0');
       setStock('0');
       setBadge('');
       setDescription('');
@@ -147,8 +141,11 @@ export default function ProductFormModal({
       category_name: selectedCategory?.name ?? '',
       category_slug: categorySlug,
       age_group: ageGroup || null,
-      rating: rating ? Number(rating) : null,
-      reviews: reviews ? Math.max(0, Math.round(Number(reviews))) : 0,
+      // Ratings and review counts are not entered by hand — there is no
+      // real review system yet. New products start with no rating; editing
+      // a product keeps whatever rating it already had.
+      rating: isEdit ? (product?.rating ?? null) : null,
+      reviews: isEdit ? (product?.reviews ?? 0) : 0,
       stock: Math.max(0, Math.round(Number(stock) || 0)),
       badge: badge.trim() || null,
       description: description.trim() || null,
@@ -350,36 +347,6 @@ export default function ProductFormModal({
                 value={badge}
                 onChange={(e) => setBadge(e.target.value)}
                 placeholder="e.g. Best Seller"
-                className="w-full rounded-xl border border-cream-200 bg-white px-4 py-2.5 text-sm text-navy-600 outline-none focus:border-sky-500 focus:ring-2 focus:ring-sky-500/20"
-              />
-            </div>
-
-            {/* Rating */}
-            <div>
-              <label className="mb-1.5 block text-xs font-bold uppercase tracking-wide text-navy-400">
-                Rating (0–5)
-              </label>
-              <input
-                type="number"
-                min={0}
-                max={5}
-                step={0.1}
-                value={rating}
-                onChange={(e) => setRating(e.target.value)}
-                className="w-full rounded-xl border border-cream-200 bg-white px-4 py-2.5 text-sm text-navy-600 outline-none focus:border-sky-500 focus:ring-2 focus:ring-sky-500/20"
-              />
-            </div>
-
-            {/* Reviews count */}
-            <div>
-              <label className="mb-1.5 block text-xs font-bold uppercase tracking-wide text-navy-400">
-                Reviews Count
-              </label>
-              <input
-                type="number"
-                min={0}
-                value={reviews}
-                onChange={(e) => setReviews(e.target.value)}
                 className="w-full rounded-xl border border-cream-200 bg-white px-4 py-2.5 text-sm text-navy-600 outline-none focus:border-sky-500 focus:ring-2 focus:ring-sky-500/20"
               />
             </div>
