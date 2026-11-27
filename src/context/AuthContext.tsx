@@ -9,15 +9,21 @@ import {
 import type { Session, User } from '@supabase/supabase-js';
 import { isSupabaseConfigured, supabase } from '@/lib/supabase';
 
+// Only this email may use the admin panel. Sign-up is disabled in the
+// admin login page, and any other signed-in user is signed out here —
+// Supabase RLS still grants writes to any authenticated user, so do not
+// create accounts for anyone else.
+export const ADMIN_EMAIL = 'toyandjoy007@gmail.com';
+
+export function isAdminUser(user: User | null | undefined): boolean {
+  return !!user?.email && user.email.toLowerCase() === ADMIN_EMAIL;
+}
+
 interface AuthContextValue {
   session: Session | null;
   user: User | null;
   loading: boolean;
   signIn: (
-    email: string,
-    password: string,
-  ) => Promise<{ error: string | null }>;
-  signUp: (
     email: string,
     password: string,
   ) => Promise<{ error: string | null }>;
@@ -50,6 +56,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       data: { subscription },
     } = supabase.auth.onAuthStateChange((_event, newSession) => {
       if (!isMounted) return;
+      // Only the store admin may stay signed in.
+      if (newSession?.user && !isAdminUser(newSession.user)) {
+        void supabase.auth.signOut();
+        setSession(null);
+        setLoading(false);
+        return;
+      }
       setSession(newSession);
       setLoading(false);
     });
@@ -58,7 +71,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       .getSession()
       .then(({ data }) => {
         if (isMounted) {
-          setSession(data.session);
+          if (data.session?.user && !isAdminUser(data.session.user)) {
+            void supabase.auth.signOut();
+            setSession(null);
+          } else {
+            setSession(data.session);
+          }
         }
       })
       .catch(() => {
@@ -93,16 +111,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     return { error: error?.message ?? null };
   }, []);
 
-  const signUp = useCallback(async (email: string, password: string) => {
-    if (!isSupabaseConfigured) {
-      return { error: 'Customer accounts are not configured yet.' };
-    }
-
-    const { error } = await supabase.auth.signUp({ email, password });
-
-    return { error: error?.message ?? null };
-  }, []);
-
   const signOut = useCallback(async () => {
     if (!isSupabaseConfigured) return;
 
@@ -117,7 +125,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         user: session?.user ?? null,
         loading,
         signIn,
-        signUp,
         signOut,
       }}
     >
