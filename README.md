@@ -7,8 +7,8 @@ an order. Orders are confirmed personally by Toy & Joy, and delivery takes
 
 - **Live site:** https://umerfarooq908.github.io/toyandjoy7/
 - **Contact:** toyandjoy007@gmail.com · WhatsApp 0340 2320338
-- **Social:** [Facebook](https://www.facebook.com/toyandjoy7) ·
-  [Instagram](https://www.instagram.com/toyandjoy7) ·
+- **Social:** [Facebook](https://www.facebook.com/profile.php?id=61596080008458) ·
+  [Instagram](https://www.instagram.com/toyandjoy007) ·
   [TikTok](https://www.tiktok.com/@toyjoy007)
 
 ## Tech stack
@@ -89,10 +89,12 @@ single-page app on GitHub Pages.
 - **No customer accounts yet.** The header account button was removed; there
   is no customer sign-in. Account data, if created, is handled through
   Supabase authentication (see the Privacy Policy page on the site).
-- **Admin access is not role-checked yet.** The Supabase migrations grant
+- **Admin access is restricted in code to toyandjoy007@gmail.com** (see
+  `src/context/AuthContext.tsx` — public sign-up is removed and any other
+  signed-in user is signed out). The Supabase migrations still grant
   product and order INSERT/UPDATE/DELETE to any authenticated Supabase user,
-  with a note that an admin role is to be enforced later. Only the store
-  owner should be given an authenticated account until that role check exists.
+  so only the store owner should be given an authenticated account until a
+  proper admin role check is added in the database too.
 - **No customer reviews yet.** The previous hardcoded reviews were removed;
   the reviews section on the home page was removed with them. Real customer
   reviews can be added once they exist.
